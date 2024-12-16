@@ -52,6 +52,67 @@ The provided dataset (`data.csv`) contains employee feedback data with fields in
 
 **Note**: Since the data is in Portuguese, you may need to handle text processing accordingly, especially for tasks involving text analysis or sentiment analysis.
 
+## Key Concepts
+
+This section explains key concepts related to the dataset to ensure you have a clear understanding of the terms used:
+
+### 1. **Likert Scale**
+The Likert scale is a common way to measure attitudes or opinions. Respondents are typically asked to rate their agreement or disagreement with a statement on a scale (we use a range from 1 to 5). For example:
+- 1: Strongly Disagree
+- 2: Disagree
+- 3: Neutral
+- 4: Agree
+- 5: Strongly Agree
+
+In this dataset, Likert scales are used to capture feedback on various aspects, such as career clarity, manager interaction, and learning opportunities.
+
+---
+
+### 2. **Favorability**
+Favorability measures the percentage of positive responses to a survey question. For example:
+- On a 5-point Likert scale:
+  - Responses of 4 (Agree) and 5 (Strongly Agree) are considered favorable.
+  - Responses of 3 (Neutral) are considered neutral.
+  - Responses of 1 (Strongly Disagree) and 2 (Disagree) are considered unfavorable.
+
+Favorability helps identify areas where employees feel positively about their experience.
+
+---
+
+### 3. **Net Promoter Score (NPS)**
+NPS is a metric used to measure loyalty and satisfaction, often represented as a single number between -100 and 100. It is based on responses to the question: 
+*"On a scale from 0 to 10, how likely are you to recommend this company as a great place to work?"*
+- Respondents are categorized as:
+  - **Promoters** (9-10): Loyal enthusiasts who will recommend the company.
+  - **Passives** (7-8): Neutral respondents.
+  - **Detractors** (0-6): Unhappy respondents who may discourage others.
+- **Calculation**:  
+
+```
+NPS = (% Promoters) - (% Detractors)
+```
+
+NPS provides insight into overall employee sentiment in a scale from -100 (100% Detractors) to +100 (100% Promoters) where the higher the better.
+
+---
+
+### 4. **Survey Conversion**
+Survey conversion refers to the percentage of employees who completed the survey out of those who were invited to participate. For example:
+- If 500 employees were invited and 350 completed the survey, the conversion rate is:
+
+```
+Conversion Rate = (350 / 500) * 100 = 70%
+```
+
+A high conversion rate indicates good participation and engagement with the survey process.
+
+---
+
+### How These Concepts Apply
+These metrics are essential to understanding the dataset and deriving actionable insights. As you work through the challenge, consider how Likert-scale responses, Favorability, NPS, and survey conversion reflect employee sentiment and help inform decision-making.
+
+---
+
 ## Task Checklist
 
 Select the tasks you wish to complete by marking them with an `X` in the `[ ]` brackets.

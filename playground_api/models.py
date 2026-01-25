@@ -1,7 +1,6 @@
 from datetime import date, datetime
-from zoneinfo import ZoneInfo
 
-from sqlalchemy import Date, SmallInteger, String, Text, func, ForeignKey
+from sqlalchemy import Date, ForeignKey, SmallInteger, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, registry, relationship
 
 table_registry = registry()
@@ -32,6 +31,9 @@ class Entrevistado(BaseModel):
     empresa: Mapped['Empresa'] = relationship(
         init=False, back_populates='entrevistado'
     )
+    respostas: Mapped['Resposta'] = relationship(
+        init=False, back_populates='entrevistado'
+    )
 
 
 @table_registry.mapped_as_dataclass
@@ -48,7 +50,9 @@ class Empresa(BaseModel):
     n2_gerencia: Mapped[str] = mapped_column(String(50))
     n3_coordenacao: Mapped[str] = mapped_column(String(50))
     n4_area: Mapped[str] = mapped_column(String(50))
-    entrevistado_fk: Mapped[int] = mapped_column(ForeignKey('entrevistados.id'))
+    entrevistado_fk: Mapped[int] = mapped_column(
+        ForeignKey('entrevistados.id')
+    )
     entrevistado: Mapped[Entrevistado] = relationship(
         init=False, back_populates='empresa'
     )
@@ -75,7 +79,9 @@ class Resposta(BaseModel):
     pergunta: Mapped[Pergunta] = relationship(
         init=False, back_populates='respostas'
     )
-    entrevistado_fk: Mapped[int] = mapped_column(ForeignKey('entrevistados.id'))
+    entrevistado_fk: Mapped[int] = mapped_column(
+        ForeignKey('entrevistados.id')
+    )
     entrevistado: Mapped[Entrevistado] = relationship(
         init=False, back_populates='respostas'
     )

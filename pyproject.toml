@@ -39,10 +39,14 @@ package-mode = false
 
 [tool.ruff]
 line-length = 79
+exclude = [
+    "migrations"
+]
 
 [tool.ruff.lint]
 preview = true
 select = ["I", "F", "E", "W", "PL", "PT"]
+ignore = ["PLR6301"]
 
 [tool.ruff.format]
 preview = true
@@ -133,3 +137,4 @@ init_migration = "alembic init migrations"
 migrate = "alembic upgrade head"
 migration_history = "alembic history"
 docker_build = "docker build -t \"playground_api\" ."
+populate_db = "python populate_database.py"

@@ -38,7 +38,11 @@ class RespostaResponse(BaseModel):
     comentario: str
 
 
-class ListOneLineResponse(BaseModel):
+class ListRespostaResponse(PaginationParams):
+    respostas: list[RespostaResponse]
+
+
+class EntrevistadoFlatResponse(BaseModel):
     nome: str
     email: str
     email_corporativo: str
@@ -69,3 +73,7 @@ class ListOneLineResponse(BaseModel):
     comentario_expectativa_permanencia: str
     enps: int
     comentario_enps: str
+
+
+class ListEntrevistadoFlatResponse(PaginationParams):
+    entrevistados: list[EntrevistadoFlatResponse]

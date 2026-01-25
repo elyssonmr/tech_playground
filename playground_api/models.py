@@ -51,7 +51,7 @@ class Pergunta(BaseModel):
 
     pergunta: Mapped[str] = mapped_column(String(100))
     respostas: Mapped[list['Resposta']] = relationship(
-        init=False
+        init=False, back_populates='pergunta'
     )
 
 
@@ -70,5 +70,5 @@ class Resposta(BaseModel):
         ForeignKey('entrevistados.id'), index=True
     )
     entrevistado: Mapped[Entrevistado] = relationship(
-        init=False
+        init=False, back_populates='respostas'
     )

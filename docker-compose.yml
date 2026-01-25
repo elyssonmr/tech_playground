@@ -1,0 +1,23 @@
+services:
+  playground_db:
+    image: 'postgres:18-alpine'
+    container_name: 'playground_db'
+    ports:
+      - '5432:5432'
+    environment:
+      - 'POSTGRES_USER=playground'
+      - 'POSTGRES_DB=playground'
+      - 'POSTGRES_PASSWORD=playground_passwd'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  playground:
+    build: .
+    ports:
+      - '8000:8000'
+    environment:
+      - DATABASE_URL=postgresql+psycopg://playground:playground_passwd@playground_database:5432/playground
+    entrypoint: ["./entrypoint.sh"]
+    depends_on:
+      - playground_db
+volumes:
+  pgdata:

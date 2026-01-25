@@ -72,7 +72,7 @@ class Pergunta(BaseModel):
 class Resposta(BaseModel):
     __tablename__ = 'respostas'
 
-    data: Mapped[date] = mapped_column(Date())
+    data: Mapped[date] = mapped_column(Date(), index=True)
     nota: Mapped[int] = mapped_column(SmallInteger())
     comentario: Mapped[str] = mapped_column(Text(), nullable=True)
     pergunta_fk: Mapped[int] = mapped_column(ForeignKey('perguntas.id'))
@@ -80,7 +80,7 @@ class Resposta(BaseModel):
         init=False, back_populates='respostas'
     )
     entrevistado_fk: Mapped[int] = mapped_column(
-        ForeignKey('entrevistados.id')
+        ForeignKey('entrevistados.id'), index=True
     )
     entrevistado: Mapped[Entrevistado] = relationship(
         init=False, back_populates='respostas'

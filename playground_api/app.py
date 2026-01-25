@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 from fastapi import FastAPI
 
+from playground_api.routes import responses_route
 from playground_api.settings import Settings
 
 settings = Settings()
@@ -15,3 +16,6 @@ app = FastAPI(version=settings.VERSION)
 )
 def version():
     return {'version': settings.VERSION}
+
+
+app.include_router(responses_route.router)

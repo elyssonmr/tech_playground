@@ -4,8 +4,8 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from playground_api.database import engine
-from playground_api.models import Empresa, Entrevistado, Pergunta, Resposta
+from playground_api.database import async_engine
+from playground_api.models import Entrevistado, Pergunta, Resposta
 
 
 class DataCSVPopulator:
@@ -28,12 +28,6 @@ class DataCSVPopulator:
             email_corporativo=answer_data['email_corporativo'],
             genero=answer_data['genero'],
             geracao=answer_data['geracao'],
-        )
-
-        return interviewed
-
-    def _extract_company(self, answer_data, interviewed):
-        empresa = Empresa(
             area=answer_data['area'],
             cargo=answer_data['cargo'],
             funcao=answer_data['funcao'],
@@ -44,11 +38,9 @@ class DataCSVPopulator:
             n2_gerencia=answer_data['n2_gerencia'],
             n3_coordenacao=answer_data['n3_coordenacao'],
             n4_area=answer_data['n4_area'],
-            entrevistado_fk=None,
         )
-        empresa.entrevistado = interviewed
 
-        return empresa
+        return interviewed
 
     def _load_questions(self):
         self._perguntas.append(Pergunta('Interesse no Cargo'))
@@ -120,12 +112,12 @@ class DataCSVPopulator:
         print()
         for count, answer_data in enumerate(self._data, start=1):
             interviewed = self._extract_interviewed(answer_data)
-            company = self._extract_company(answer_data, interviewed)
             answers = self._extract_answers(answer_data, interviewed)
 
-            async with AsyncSession(engine, expire_on_commit=False) as session:
+            async with AsyncSession(
+                async_engine, expire_on_commit=False
+            ) as session:
                 session.add(interviewed)
-                session.add(company)
                 session.add_all(answers)
                 await session.commit()
 

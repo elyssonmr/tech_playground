@@ -1,12 +1,13 @@
 from datetime import date, datetime
 
 from sqlalchemy import Date, ForeignKey, SmallInteger, String, Text, func
+from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import Mapped, mapped_column, registry, relationship
 
 table_registry = registry()
 
 
-class BaseModel:
+class BaseModel(AsyncAttrs):
     id: Mapped[int] = mapped_column(init=False, primary_key=True)
     created_at: Mapped[datetime] = mapped_column(
         init=False, server_default=func.now(), nullable=False
@@ -28,18 +29,6 @@ class Entrevistado(BaseModel):
     email_corporativo: Mapped[str] = mapped_column(String(150))
     genero: Mapped[str] = mapped_column(String(15))
     geracao: Mapped[str] = mapped_column(String(15))
-    empresa: Mapped['Empresa'] = relationship(
-        init=False, back_populates='entrevistado'
-    )
-    respostas: Mapped['Resposta'] = relationship(
-        init=False, back_populates='entrevistado'
-    )
-
-
-@table_registry.mapped_as_dataclass
-class Empresa(BaseModel):
-    __tablename__ = 'empresas'
-
     area: Mapped[str] = mapped_column(String(50))
     cargo: Mapped[str] = mapped_column(String(50))
     funcao: Mapped[str] = mapped_column(String(50))
@@ -50,11 +39,9 @@ class Empresa(BaseModel):
     n2_gerencia: Mapped[str] = mapped_column(String(50))
     n3_coordenacao: Mapped[str] = mapped_column(String(50))
     n4_area: Mapped[str] = mapped_column(String(50))
-    entrevistado_fk: Mapped[int] = mapped_column(
-        ForeignKey('entrevistados.id')
-    )
-    entrevistado: Mapped[Entrevistado] = relationship(
-        init=False, back_populates='empresa'
+
+    respostas: Mapped[list['Resposta']] = relationship(
+        init=False
     )
 
 
@@ -64,7 +51,7 @@ class Pergunta(BaseModel):
 
     pergunta: Mapped[str] = mapped_column(String(100))
     respostas: Mapped[list['Resposta']] = relationship(
-        init=False, back_populates='pergunta'
+        init=False
     )
 
 
@@ -77,11 +64,11 @@ class Resposta(BaseModel):
     comentario: Mapped[str] = mapped_column(Text(), nullable=True)
     pergunta_fk: Mapped[int] = mapped_column(ForeignKey('perguntas.id'))
     pergunta: Mapped[Pergunta] = relationship(
-        init=False, back_populates='respostas'
+        init=False,
     )
     entrevistado_fk: Mapped[int] = mapped_column(
         ForeignKey('entrevistados.id'), index=True
     )
     entrevistado: Mapped[Entrevistado] = relationship(
-        init=False, back_populates='respostas'
+        init=False
     )

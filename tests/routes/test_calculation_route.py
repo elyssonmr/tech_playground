@@ -28,4 +28,4 @@ def test_get_count_by_area_should_return_answers_from_location(
 
     assert response.status_code == HTTPStatus.OK
     response_data = response.json()
-    assert response_data[entrevistado.localidade] == 1
+    assert response_data['count'] == 1

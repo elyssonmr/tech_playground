@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from playground_api.custom_types import T_Database
 from playground_api.schemas import (
+    CountResponse,
     ListMediansResponse,
     MedianResponse,
     NPSResponse,
@@ -35,10 +36,10 @@ async def calculate_medians(session: T_Database):
     return ListMediansResponse(medians=medians_response)
 
 
-@router.get('/answers_location/{location_name}')
+@router.get('/answers_location/{location_name}', response_model=CountResponse)
 async def count_answers_by_location(location_name: str, session: T_Database):
     service = CalculationService(session)
 
-    answers_by_location = await service.interviewed_by_location(location_name)
+    count = await service.interviewed_by_location(location_name)
 
-    return answers_by_location
+    return CountResponse(count=count)

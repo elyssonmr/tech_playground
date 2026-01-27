@@ -90,3 +90,7 @@ class MedianResponse(BaseModel):
 
 class ListMediansResponse(BaseModel):
     medians: list[MedianResponse]
+
+
+class CountResponse(BaseModel):
+    count: int

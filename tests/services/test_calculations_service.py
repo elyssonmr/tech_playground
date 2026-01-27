@@ -48,7 +48,12 @@ async def test_count_locations_should_return_count_by_location(
         entrevistado.localidade
     )
 
-    assert isinstance(location_count_data, dict)
-    # Data is random, so we can't really compare key values
-    for key in location_count_data:
-        assert location_count_data[key] == 1
+    assert location_count_data == 1
+
+
+async def test_count_invalid_location_should_return_count_by_location(
+    service, entrevistado
+):
+    location_count_data = await service.interviewed_by_location('invalid')
+
+    assert location_count_data == 0

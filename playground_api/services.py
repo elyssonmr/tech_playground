@@ -1,6 +1,7 @@
 import statistics
 
 from sqlalchemy import case, func, select
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -264,6 +265,9 @@ class CalculationService:
             .order_by(func.count(Entrevistado.localidade).desc())
         ).filter(Entrevistado.localidade == location)
 
-        result = (await self._session.execute(query)).all()
+        try:
+            result = (await self._session.execute(query)).one()
+        except NoResultFound:
+            return 0
 
-        return dict(result)
+        return result.count

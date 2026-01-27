@@ -1,0 +1,33 @@
+name: Docker Image
+on:
+  push:
+    branches:
+      - main
+jobs:
+  generate_image:
+    name: Generate/Upload Image
+    runs-on: ubuntu-latest
+    concurrency: docker-group    # optional: ensure only one action runs at a time
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v6
+
+      - name: Login to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ variables.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ variables.DOCKERHUB_USERNAME }}/tech_playground:latest

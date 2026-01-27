@@ -40,9 +40,7 @@ class Entrevistado(BaseModel):
     n3_coordenacao: Mapped[str] = mapped_column(String(50))
     n4_area: Mapped[str] = mapped_column(String(50))
 
-    respostas: Mapped[list['Resposta']] = relationship(
-        init=False
-    )
+    respostas: Mapped[list['Resposta']] = relationship(init=False)
 
 
 @table_registry.mapped_as_dataclass
@@ -62,13 +60,13 @@ class Resposta(BaseModel):
     data: Mapped[date] = mapped_column(Date(), index=True)
     nota: Mapped[int] = mapped_column(SmallInteger())
     comentario: Mapped[str] = mapped_column(Text(), nullable=True)
-    pergunta_fk: Mapped[int] = mapped_column(ForeignKey('perguntas.id'))
-    pergunta: Mapped[Pergunta] = relationship(
-        init=False,
+    pergunta_fk: Mapped[int] = mapped_column(
+        ForeignKey('perguntas.id'), init=False
     )
+    pergunta: Mapped[Pergunta] = relationship(back_populates='respostas')
     entrevistado_fk: Mapped[int] = mapped_column(
-        ForeignKey('entrevistados.id'), index=True
+        ForeignKey('entrevistados.id'), index=True, init=False
     )
     entrevistado: Mapped[Entrevistado] = relationship(
-        init=False, back_populates='respostas'
+        back_populates='respostas'
     )

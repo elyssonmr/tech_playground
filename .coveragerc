@@ -1,3 +1,3 @@
 [run]
-omit = madr/database.py
+omit = playground_api/database.py
 concurrency = thread,gevent

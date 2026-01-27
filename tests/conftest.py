@@ -92,7 +92,7 @@ class RespostaFactory(Factory):
         model = Resposta
 
     data = FuzzyDate(date.today())
-    nota = FuzzyInteger(low=0, high=10)
+    nota = FuzzyInteger(low=1, high=10)
     comentario = FuzzyText()
     pergunta = SubFactory(PerguntaFactory)
     entrevistado = SubFactory(EntrevistadoFactory)

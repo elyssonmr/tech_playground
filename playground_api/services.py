@@ -1,8 +1,8 @@
-from sqlalchemy import select
+from sqlalchemy import case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from playground_api.models import Entrevistado, Resposta
+from playground_api.models import Entrevistado, Pergunta, Resposta
 from playground_api.schemas import (
     EntrevistadoFlatResponse,
     EntrevistadoResponse,
@@ -205,3 +205,61 @@ class ResponseService:
             )
 
         return entrevistados
+
+
+class CalculationService:
+    def __init__(self, session):
+        self._session = session
+
+    async def calculate_nps(self):
+        # Performing Database Calculation
+        min_promoters = 9
+        max_detractors = 6
+        promoter_calc = case((Resposta.nota >= min_promoters, 1))
+        detractor_calc = case((Resposta.nota <= max_detractors, 1))
+
+        query = select(
+            func.count(Resposta.id).label('total'),
+            func.count(promoter_calc).label('promoters'),
+            func.count(detractor_calc).label('detractors'),
+        ).filter(Pergunta.pergunta == 'eNPS')
+
+        result = (await self._session.execute(query)).one()
+
+        if result.total == 0:
+            return 0
+
+        nps = (
+            (result.promoters / result.total)
+            - (result.detractors / result.total)
+        ) * 100
+        return round(nps, 2)
+
+    async def calculate_medians(self):
+        query = select(Pergunta).options(joinedload(Pergunta.respostas))
+        query = query.filter(Pergunta.pergunta != 'eNPS')
+
+        perguntas = (await self._session.scalars(query)).unique().all()
+
+        means = {}
+
+        for pergunta in perguntas:
+            respostas = await pergunta.awaitable_attrs.respostas
+            means[pergunta.pergunta] = [r.nota for r in respostas]
+
+        return means
+
+    async def interviewed_by_location(self):
+        # Performing Database Calculation
+        query = (
+            select(
+                Entrevistado.localidade,
+                func.count(Entrevistado.localidade).label('count'),
+            )
+            .group_by(Entrevistado.localidade)
+            .order_by(func.count(Entrevistado.localidade).desc())
+        )
+
+        result = (await self._session.execute(query)).all()
+
+        return dict(result)

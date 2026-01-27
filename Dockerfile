@@ -1,34 +1,32 @@
-FROM python:3.13-slim
+FROM python:3.13-slim AS builder
 
-ENV POETRY_VIRTUALENVS_CREATE=false
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=1
+
+RUN pip install poetry
+
+WORKDIR /app
+
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --no-root --without dev
+
+FROM python:3.13-slim AS runtime
 
 ARG USER_NAME=user
 ARG GROUP_NAME=user_group
 ARG UID=1234
 ARG GID=4321
-
-# Create user and group with specified UID and GID
 RUN groupadd -g ${GID} ${GROUP_NAME} && \
     useradd -u ${UID} -g ${GROUP_NAME} -s /sbin/nologin -m -d /home/${USER_NAME} ${USER_NAME}
-
-# Install Poetry via pip
-RUN pip install poetry
-
 WORKDIR /app
-
-# Copy and install dependencies as root
-COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-root --no-interaction --without dev
-
-# Adjust permissions and switch to the created user
-RUN chown -R ${USER_NAME}:${GROUP_NAME} /app
-USER ${USER_NAME}
-
-# Copy the rest of the application code
+COPY --from=builder /app/.venv /app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
 COPY --chown=${USER_NAME}:${GROUP_NAME} . .
-
+RUN chmod +x entrypoint.sh
+USER ${USER_NAME}
 EXPOSE 8000
 
-RUN chmod +x entrypoint.sh
-
-CMD ["poetry", "run", "uvicorn", "playground_api.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["./entrypoint.sh"]

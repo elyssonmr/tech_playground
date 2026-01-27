@@ -16,7 +16,6 @@ services:
       - '8000:8000'
     environment:
       - DATABASE_URL=postgresql+psycopg://playground:playground_passwd@playground_database:5432/playground
-    entrypoint: ["./entrypoint.sh"]
     depends_on:
       - playground_db
 volumes:

@@ -77,3 +77,16 @@ class EntrevistadoFlatResponse(BaseModel):
 
 class ListEntrevistadoFlatResponse(PaginationParams):
     entrevistados: list[EntrevistadoFlatResponse]
+
+
+class NPSResponse(BaseModel):
+    nps: float
+
+
+class MedianResponse(BaseModel):
+    pergunta: str
+    median: int
+
+
+class ListMediansResponse(BaseModel):
+    medians: list[MedianResponse]

@@ -1,3 +1,5 @@
+import statistics
+
 from sqlalchemy import case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -241,15 +243,17 @@ class CalculationService:
 
         perguntas = (await self._session.scalars(query)).unique().all()
 
-        means = {}
+        medians = {}
 
         for pergunta in perguntas:
             respostas = await pergunta.awaitable_attrs.respostas
-            means[pergunta.pergunta] = [r.nota for r in respostas]
+            medians[pergunta.pergunta] = statistics.median([
+                r.nota for r in respostas
+            ])
 
-        return means
+        return medians
 
-    async def interviewed_by_location(self):
+    async def interviewed_by_location(self, location):
         # Performing Database Calculation
         query = (
             select(
@@ -258,7 +262,7 @@ class CalculationService:
             )
             .group_by(Entrevistado.localidade)
             .order_by(func.count(Entrevistado.localidade).desc())
-        )
+        ).filter(Entrevistado.localidade == location)
 
         result = (await self._session.execute(query)).all()
 

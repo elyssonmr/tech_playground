@@ -1,20 +1,14 @@
 from http import HTTPStatus
-from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter
 
-from playground_api.database import get_session
+from playground_api.custom_types import T_Database, T_Pagination
 from playground_api.schemas import (
     ListEntrevistadoFlatResponse,
     ListEntrevistadosResponse,
     ListRespostaResponse,
-    PaginationParams,
 )
 from playground_api.services import ResponseService
-
-T_Database = Annotated[AsyncSession, Depends(get_session)]
-T_Pagination = Annotated[PaginationParams, Query()]
 
 router = APIRouter(prefix='/responses', tags=['Responses'])
 

@@ -102,18 +102,18 @@ class RespostaFactory(Factory):
 async def entrevistado(session):
     obj = EntrevistadoFactory()
     RespostaFactory.build_batch(8, entrevistado=obj)
-
     session.add(obj)
     await session.commit()
     await session.refresh(obj)
+
     return obj
 
 
 @pytest.fixture
 async def resposta(session):
     obj = RespostaFactory()
-
     session.add(obj)
     await session.commit()
     await session.refresh(obj)
+
     return obj

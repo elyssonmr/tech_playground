@@ -44,7 +44,9 @@ async def test_calculate_no_data_means_should_return_empty_dict(service):
 async def test_count_locations_should_return_count_by_location(
     service, entrevistado
 ):
-    location_count_data = await service.interviewed_by_location()
+    location_count_data = await service.interviewed_by_location(
+        entrevistado.localidade
+    )
 
     assert isinstance(location_count_data, dict)
     # Data is random, so we can't really compare key values

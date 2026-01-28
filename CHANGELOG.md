@@ -2,7 +2,7 @@
 
 <!-- towncrier release notes start -->
 
-[1.0.0](https://github.com/USER/REPO_NAME/tree/1.0.0) (2026-01-27)
+[1.0.0](https://github.com/elyssonmr/tech_playground/tree/1.0.0) (2026-01-27)
 ==================
 
 Features

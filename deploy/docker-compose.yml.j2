@@ -16,6 +16,7 @@ services:
           memory: 128M
   playground:
     image: elyssonmr/tech_playground:latest
+    pull_policy: always
     ports:
       - '8080:8000'
     environment:

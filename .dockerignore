@@ -13,4 +13,3 @@ deploy/*
 changelog.d/*
 .env
 .python-version
-alembic.ini

@@ -94,11 +94,9 @@ class DataCSVPopulator:
                 data=response_date,
                 nota=response_value,
                 comentario=response_comment,
-                pergunta_fk=None,
-                entrevistado_fk=None,
+                pergunta=question,
+                entrevistado=interviewed
             )
-            response.pergunta = question
-            response.entrevistado = interviewed
             responses.append(response)
 
         return responses

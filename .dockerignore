@@ -9,3 +9,8 @@ tests/*
 .python-version
 docker-compose.yml
 .git
+deploy/*
+changelog.d/*
+.env
+.python-version
+alembic.ini

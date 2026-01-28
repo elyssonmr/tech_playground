@@ -118,8 +118,8 @@ commit_args = ""
 
 [[tool.bumpversion.files]]
 filename = "playground_api/settings.py"
-search = "version: str = '{current_version}'"
-replace = "version: str = '{new_version}'"
+search = "VERSION: str = '{current_version}'"
+replace = "VERSION: str = '{new_version}'"
 
 [[tool.bumpversion.files]]
 filename = "pyproject.toml"

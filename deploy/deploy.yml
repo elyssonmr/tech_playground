@@ -1,0 +1,47 @@
+- name: Deploy Docker App to Local Raspberry Pi
+  hosts: raspberrypi
+  become: true  # Runs commands as sudo
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install Docker dependencies
+      apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+
+    - name: Install Docker via official convenience script
+      shell: curl -sSL https://get.docker.com | sh
+      args:
+        creates: /usr/bin/docker  # Only runs if docker isn't already installed
+
+    - name: Ensure user is in the docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Ensure app directory exists
+      file:
+        path: "/home/{{ ansible_user }}/tech_playground"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Copy docker-compose.yml
+      template:
+        src: docker-compose.yml.j2
+        dest: "/home/{{ ansible_user }}/tech_playground/docker-compose.yml"
+
+    - name: Execute docker-compose.yml
+      community.docker.docker_compose_v2:
+        project_src: "/home/{{ ansible_user }}/tech_playground"
+        state: present

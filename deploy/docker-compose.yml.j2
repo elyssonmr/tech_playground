@@ -1,0 +1,30 @@
+services:
+  playground_db:
+    image: 'postgres:18-alpine'
+    container_name: 'playground_db'
+    ports:
+      - '5432:5432'
+    environment:
+      - 'POSTGRES_USER={{ db_username }}'
+      - 'POSTGRES_DB={{ db_database }}'
+      - 'POSTGRES_PASSWORD={{ db_password }}'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+  playground:
+    image: elyssonmr/tech_playground:latest
+    ports:
+      - '8080:8000'
+    environment:
+      - DATABASE_URL={{ database_url }}
+    depends_on:
+      - playground_db
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+volumes:
+  pgdata:
